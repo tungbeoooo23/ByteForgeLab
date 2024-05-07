@@ -1,34 +1,30 @@
-function minWindow(s, t) {
-  const map = new Map();
-  for (const char of t) {
-    map.set(char, (map.get(char) || 0) + 1);
-  }
-  let required = map.size;
-  let left = 0;
-  let right = 0;
-  let minLen = Infinity;
-  let substrStart = 0;
-  while (right < s.length) {
-    const char = s[right];
-    if (map.has(char)) {
-      map.set(char, map.get(char) - 1);
-      if (map.get(char) === 0) required--;
+function maximalRectangle(matrix) {
+  if (matrix.length === 0) return 0;
+  const rows = matrix.length;
+  const cols = matrix[0].length;
+  const heights = Array(cols).fill(0);
+  let maxArea = 0;
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      heights[j] = matrix[i][j] === "1" ? heights[j] + 1 : 0;
     }
-    while (required === 0) {
-      if (right - left + 1 < minLen) {
-        minLen = right - left + 1;
-        substrStart = left;
-      }
-      const leftChar = s[left];
-      if (map.has(leftChar)) {
-        map.set(leftChar, map.get(leftChar) + 1);
-        if (map.get(leftChar) > 0) required++;
-      }
-      left++;
-    }
-    right++;
+    maxArea = Math.max(maxArea, largestRectangleArea(heights));
   }
-  return minLen === Infinity
-    ? ""
-    : s.substring(substrStart, substrStart + minLen);
+  return maxArea;
+  function largestRectangleArea(heights) {
+    const stack = [];
+    let maxArea = 0;
+    for (let i = 0; i <= heights.length; i++) {
+      while (
+        stack.length !== 0 &&
+        (i === heights.length || heights[i] < heights[stack[stack.length - 1]])
+      ) {
+        const height = heights[stack.pop()];
+        const width = stack.length === 0 ? i : i - stack[stack.length - 1] - 1;
+        maxArea = Math.max(maxArea, height * width);
+      }
+      stack.push(i);
+    }
+    return maxArea;
+  }
 }
