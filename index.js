@@ -1,30 +1,16 @@
-function maximalRectangle(matrix) {
-  if (matrix.length === 0) return 0;
-  const rows = matrix.length;
-  const cols = matrix[0].length;
-  const heights = Array(cols).fill(0);
-  let maxArea = 0;
-  for (let i = 0; i < rows; i++) {
-    for (let j = 0; j < cols; j++) {
-      heights[j] = matrix[i][j] === "1" ? heights[j] + 1 : 0;
-    }
-    maxArea = Math.max(maxArea, largestRectangleArea(heights));
+const quickSort = (arr) => {
+  if (arr.length <= 1) {
+    return arr;
   }
-  return maxArea;
-  function largestRectangleArea(heights) {
-    const stack = [];
-    let maxArea = 0;
-    for (let i = 0; i <= heights.length; i++) {
-      while (
-        stack.length !== 0 &&
-        (i === heights.length || heights[i] < heights[stack[stack.length - 1]])
-      ) {
-        const height = heights[stack.pop()];
-        const width = stack.length === 0 ? i : i - stack[stack.length - 1] - 1;
-        maxArea = Math.max(maxArea, height * width);
-      }
-      stack.push(i);
+  const pivot = arr[arr.length - 1];
+  const left = [];
+  const right = [];
+  for (let i = 0; i < arr.length - 1; i++) {
+    if (arr[i] < pivot) {
+      left.push(arr[i]);
+    } else {
+      right.push(arr[i]);
     }
-    return maxArea;
   }
-}
+  return quickSort(left).concat(pivot, quickSort(right));
+};
