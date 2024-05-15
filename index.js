@@ -1,33 +1,20 @@
-function solveNQueens(n) {
-  const result = [];
-  const board = Array.from({ length: n }, () =>
-    Array.from({ length: n }, () => "."),
-  );
-  backtrack(0);
-  return result;
-  function backtrack(row) {
-    if (row === n) {
-      result.push(board.map((row) => row.join("")));
-      return;
-    }
-    for (let col = 0; col < n; col++) {
-      if (isValid(row, col)) {
-        board[row][col] = "Q";
-        backtrack(row + 1);
-        board[row][col] = ".";
-      }
+function multiply(num1, num2) {
+  const m = num1.length;
+  const n = num2.length;
+  const pos = new Array(m + n).fill(0);
+  for (let i = m - 1; i >= 0; i--) {
+    for (let j = n - 1; j >= 0; j--) {
+      const mul = (num1[i] - "0") * (num2[j] - "0");
+      const p1 = i + j;
+      const p2 = i + j + 1;
+      const sum = mul + pos[p2];
+      pos[p1] += Math.floor(sum / 10);
+      pos[p2] = sum % 10;
     }
   }
-  function isValid(row, col) {
-    for (let i = 0; i < row; i++) {
-      if (board[i][col] === "Q") return false;
-    }
-    for (let i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
-      if (board[i][j] === "Q") return false;
-    }
-    for (let i = row - 1, j = col + 1; i >= 0 && j < n; i--, j++) {
-      if (board[i][j] === "Q") return false;
-    }
-    return true;
+  let result = "";
+  for (const p of pos) {
+    if (!(result.length === 0 && p === 0)) result += p;
   }
+  return result.length === 0 ? "0" : result;
 }
